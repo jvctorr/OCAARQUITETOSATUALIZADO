@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Painel Admin · OCA Arquitetos</title>
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("oca-theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================
+       DARK MODE / ADMIN PREMIUM
+    ========================= */
+
+    body.admin-body {
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .admin-theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      border: 1px solid rgba(90, 70, 48, 0.16);
+      border-radius: 999px;
+      padding: 8px 14px 8px 8px;
+
+      background: rgba(255, 255, 255, 0.78);
+      color: #2c2119;
+
+      font-family: "Inter", sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+
+      box-shadow:
+        0 18px 50px rgba(40, 28, 20, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65);
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      cursor: pointer;
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .admin-theme-toggle:hover {
+      transform: translateY(-2px);
+      border-color: rgba(138, 103, 67, 0.26);
+      box-shadow:
+        0 22px 60px rgba(40, 28, 20, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .theme-toggle-track {
+      width: 44px;
+      height: 26px;
+      border-radius: 999px;
+      padding: 3px;
+
+      display: flex;
+      align-items: center;
+
+      background: linear-gradient(135deg, #f4eadc, #d7c1a2);
+      box-shadow: inset 0 2px 8px rgba(60, 43, 28, 0.14);
+      transition: 0.25s ease;
+    }
+
+    .theme-toggle-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #ffffff;
+      color: #2c2119;
+
+      font-size: 0.72rem;
+      box-shadow: 0 5px 14px rgba(55, 38, 24, 0.22);
+      transform: translateX(0);
+      transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease;
+    }
+
+    .theme-toggle-label {
+      white-space: nowrap;
+    }
+
+    html[data-theme="dark"] .admin-body {
+      background:
+        radial-gradient(circle at top left, rgba(180, 145, 100, 0.13), transparent 34%),
+        linear-gradient(135deg, #080706 0%, #14100d 55%, #090807 100%);
+      color: #f5efe7;
+    }
+
+    html[data-theme="dark"] .admin-top,
+    html[data-theme="dark"] .admin-sidebar,
+    html[data-theme="dark"] .admin-card,
+    html[data-theme="dark"] .glass {
+      background: rgba(22, 18, 14, 0.82);
+      border-color: rgba(226, 205, 173, 0.18);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+    }
+
+    html[data-theme="dark"] .admin-shell,
+    html[data-theme="dark"] .admin-content,
+    html[data-theme="dark"] .admin-section {
+      color: #f5efe7;
+    }
+
+    html[data-theme="dark"] .brand-text,
+    html[data-theme="dark"] .admin-head h1,
+    html[data-theme="dark"] .admin-card h2,
+    html[data-theme="dark"] .admin-form label,
+    html[data-theme="dark"] .settings-form label {
+      color: #f6efe6;
+    }
+
+    html[data-theme="dark"] .muted {
+      color: rgba(246, 239, 230, 0.68);
+    }
+
+    html[data-theme="dark"] .eyebrow {
+      color: #d9b98c;
+    }
+
+    html[data-theme="dark"] .admin-tab {
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(246, 239, 230, 0.76);
+      border-color: rgba(226, 205, 173, 0.12);
+    }
+
+    html[data-theme="dark"] .admin-tab:hover,
+    html[data-theme="dark"] .admin-tab.active {
+      background: rgba(217, 185, 140, 0.16);
+      color: #f7e7c8;
+      border-color: rgba(217, 185, 140, 0.34);
+    }
+
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] textarea,
+    html[data-theme="dark"] select {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(226, 205, 173, 0.18);
+      color: #f6efe6;
+    }
+
+    html[data-theme="dark"] input::placeholder,
+    html[data-theme="dark"] textarea::placeholder {
+      color: rgba(246, 239, 230, 0.42);
+    }
+
+    html[data-theme="dark"] input:focus,
+    html[data-theme="dark"] textarea:focus,
+    html[data-theme="dark"] select:focus {
+      border-color: rgba(217, 185, 140, 0.72);
+      box-shadow: 0 0 0 4px rgba(217, 185, 140, 0.12);
+    }
+
+    html[data-theme="dark"] select option {
+      background: #15110d;
+      color: #f6efe6;
+    }
+
+    html[data-theme="dark"] input[type="file"] {
+      color: rgba(246, 239, 230, 0.78);
+    }
+
+    html[data-theme="dark"] input[type="file"]::file-selector-button {
+      background: rgba(217, 185, 140, 0.14);
+      color: #f7e7c8;
+      border: 1px solid rgba(217, 185, 140, 0.24);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    html[data-theme="dark"] .admin-check {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(226, 205, 173, 0.14);
+      color: #f6efe6;
+    }
+
+    html[data-theme="dark"] .btn-ghost {
+      background: rgba(255, 255, 255, 0.04);
+      color: #f6efe6;
+      border-color: rgba(226, 205, 173, 0.18);
+    }
+
+    html[data-theme="dark"] .btn-ghost:hover {
+      background: rgba(217, 185, 140, 0.12);
+      border-color: rgba(217, 185, 140, 0.35);
+    }
+
+    html[data-theme="dark"] .admin-message {
+      color: rgba(246, 239, 230, 0.8);
+    }
+
+    html[data-theme="dark"] .admin-message.success {
+      color: #9ee6b2;
+    }
+
+    html[data-theme="dark"] .admin-message.error {
+      color: #ff9d9d;
+    }
+
+    /* Partes criadas pelo admin.js */
+    html[data-theme="dark"] .admin-list {
+      color: #f6efe6;
+    }
+
+    html[data-theme="dark"] .admin-item,
+    html[data-theme="dark"] .admin-result-box {
+      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(226, 205, 173, 0.14);
+      color: #f6efe6;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    html[data-theme="dark"] .admin-item strong,
+    html[data-theme="dark"] .admin-result-box strong {
+      color: #f6efe6;
+    }
+
+    html[data-theme="dark"] .admin-item span,
+    html[data-theme="dark"] .admin-item p {
+      color: rgba(246, 239, 230, 0.65);
+    }
+
+    html[data-theme="dark"] .admin-item img {
+      border-color: rgba(226, 205, 173, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    html[data-theme="dark"] .btn-ghost.danger {
+      color: #ff9d9d;
+      border-color: rgba(255, 157, 157, 0.25);
+    }
+
+    html[data-theme="dark"] .btn-ghost.danger:hover {
+      background: rgba(255, 157, 157, 0.1);
+      border-color: rgba(255, 157, 157, 0.4);
+    }
+
+    html[data-theme="dark"] .admin-theme-toggle {
+      background: rgba(18, 15, 12, 0.82);
+      color: #f6efe6;
+      border-color: rgba(226, 205, 173, 0.18);
+
+      box-shadow:
+        0 18px 55px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    html[data-theme="dark"] .admin-theme-toggle:hover {
+      border-color: rgba(217, 185, 140, 0.34);
+      box-shadow:
+        0 22px 65px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    html[data-theme="dark"] .theme-toggle-track {
+      background: linear-gradient(135deg, #2a2119, #9f7c4e);
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.32);
+    }
+
+    html[data-theme="dark"] .theme-toggle-thumb {
+      transform: translateX(18px);
+      background: #15110d;
+      color: #f7e7c8;
+    }
+
+    @media (max-width: 720px) {
+      .admin-top-actions {
+        gap: 8px;
+      }
+
+      .admin-theme-toggle {
+        padding: 7px;
+      }
+
+      .theme-toggle-label {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="admin-body">
+  <header class="admin-top glass">
+    <a href="index.html" class="brand">
+      <img src="assets/images/logo.jpg" alt="OCA Arquitetos" class="brand-mark" />
+      <span class="brand-text"><strong>OCA</strong> Admin</span>
+    </a>
+
+    <div class="admin-top-actions">
+      <button class="admin-theme-toggle" type="button" id="themeToggle" aria-label="Alternar modo escuro">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-thumb" id="themeIcon">🌙</span>
+        </span>
+        <span class="theme-toggle-label" id="themeLabel">Modo escuro</span>
+      </button>
+
+      <a href="index.html" class="btn btn-ghost">Ver site</a>
+      <button id="logoutBtn" class="btn btn-primary">Sair</button>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <aside class="admin-sidebar glass">
+      <button class="admin-tab active" data-tab="projects">Projetos</button>
+      <button class="admin-tab" data-tab="settings">Textos e links</button>
+      <button class="admin-tab" data-tab="quiz">Quiz</button>
+    </aside>
+
+    <section class="admin-content">
+      <div class="admin-head">
+        <div>
+          <span class="eyebrow">Painel administrativo</span>
+          <h1>Editar site OCA Arquitetos</h1>
+          <p class="muted">As alterações salvas aqui aparecem no site público.</p>
+        </div>
+        <p id="adminStatus" class="admin-message"></p>
+      </div>
+
+      <section id="tab-projects" class="admin-section active">
+        <div class="admin-grid">
+          <form id="projectForm" class="admin-card glass admin-form">
+            <h2 id="projectFormTitle">Novo projeto</h2>
+            <input type="hidden" id="projectId" />
+
+            <label>Título
+              <input id="projectTitle" type="text" placeholder="Nome do projeto" required />
+            </label>
+
+            <label>Categoria
+              <select id="projectCategory">
+                <option value="residencial">Residencial</option>
+                <option value="comercial">Comercial</option>
+                <option value="interiores">Interiores</option>
+                <option value="reforma">Reforma</option>
+                <option value="retrofit">Retrofit</option>
+                <option value="visualizacao">Visualização arquitetônica</option>
+                <option value="planejados">Ambientes planejados (legado)</option>
+              </select>
+            </label>
+
+            <label>Status
+              <select id="projectStatus">
+                <option value="concluido">Concluído</option>
+                <option value="andamento">Em andamento</option>
+              </select>
+            </label>
+
+            <label>Descrição
+              <textarea id="projectDescription" rows="4" placeholder="Descrição do projeto"></textarea>
+            </label>
+
+            <div class="admin-two">
+              <label>Local (opcional)
+                <input id="projectLocation" type="text" placeholder="Ex.: São Paulo / SP" />
+              </label>
+              <label>Ano (opcional)
+                <input id="projectYear" type="text" placeholder="2025" />
+              </label>
+            </div>
+
+            <label>Área (opcional)
+              <input id="projectArea" type="text" placeholder="Ex.: 120 m²" />
+            </label>
+
+            <label>Desafio (opcional)
+              <textarea id="projectChallenge" rows="2"></textarea>
+            </label>
+            <label>Solução (opcional)
+              <textarea id="projectSolution" rows="2"></textarea>
+            </label>
+            <label>Resultado (opcional)
+              <textarea id="projectResult" rows="2"></textarea>
+            </label>
+
+            <label>Galeria de imagens (opcional, uma URL por linha)
+              <textarea id="projectGallery" rows="3" placeholder="assets/images/galeria-01.jpg&#10;assets/images/galeria-02.jpg"></textarea>
+            </label>
+
+            <label>Vídeo (opcional, URL ou caminho local)
+              <input id="projectVideo" type="text" placeholder="assets/videos/projeto.mp4" />
+            </label>
+
+            <div class="admin-two">
+              <label>Imagem Antes (opcional)
+                <input id="projectBefore" type="text" placeholder="assets/images/antes.jpg" />
+              </label>
+              <label>Imagem Depois (opcional)
+                <input id="projectAfter" type="text" placeholder="assets/images/depois.jpg" />
+              </label>
+            </div>
+
+
+            <label>Imagem atual / URL
+              <input id="projectImageUrl" type="text" placeholder="assets/images/... ou URL do Supabase" />
+            </label>
+
+            <label>Enviar nova imagem
+              <input id="projectImageFile" type="file" accept="image/*" />
+            </label>
+
+            <div class="admin-two">
+              <label>Tamanho do card
+                <select id="projectSpan">
+                  <option value="4">Normal</option>
+                  <option value="6">Médio horizontal</option>
+                  <option value="8">Grande horizontal</option>
+                </select>
+              </label>
+
+              <label>Altura
+                <select id="projectHeight">
+                  <option value="h-sq">Quadrado</option>
+                  <option value="h-wide">Largo</option>
+                  <option value="h-tall">Alto</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="admin-two">
+              <label>Ordem
+                <input id="projectOrder" type="number" value="0" />
+              </label>
+
+              <label class="admin-check">
+                <input id="projectActive" type="checkbox" checked />
+                Projeto ativo
+              </label>
+            </div>
+
+            <div class="admin-actions-row">
+              <button class="btn btn-primary" type="submit">Salvar projeto</button>
+              <button class="btn btn-ghost" type="button" id="clearProjectBtn">Limpar</button>
+            </div>
+          </form>
+
+          <div class="admin-card glass">
+            <h2>Projetos cadastrados</h2>
+            <div id="projectsList" class="admin-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-settings" class="admin-section">
+        <div class="admin-card glass">
+          <h2>Textos, WhatsApp e Instagram</h2>
+          <p class="muted">Edite os textos principais do site. Depois clique em salvar.</p>
+          <form id="settingsForm" class="settings-form"></form>
+          <button id="saveSettingsBtn" class="btn btn-primary">Salvar textos e links</button>
+        </div>
+      </section>
+
+      <section id="tab-quiz" class="admin-section">
+        <div class="admin-grid">
+          <form id="quizQuestionForm" class="admin-card glass admin-form">
+            <h2 id="quizFormTitle">Nova pergunta do quiz</h2>
+            <input type="hidden" id="quizQuestionId" />
+
+            <label>Pergunta
+              <input id="quizQuestionText" type="text" placeholder="Ex: Qual sensação você quer para o espaço?" required />
+            </label>
+
+            <label>Opções separadas por linha
+              <textarea id="quizOptionsText" rows="7" placeholder="Moderno&#10;Aconchegante&#10;Minimalista"></textarea>
+            </label>
+
+            <div class="admin-two">
+              <label>Ordem
+                <input id="quizOrder" type="number" value="0" />
+              </label>
+
+              <label class="admin-check">
+                <input id="quizActive" type="checkbox" checked />
+                Pergunta ativa
+              </label>
+            </div>
+
+            <div class="admin-actions-row">
+              <button class="btn btn-primary" type="submit">Salvar pergunta</button>
+              <button class="btn btn-ghost" type="button" id="clearQuizBtn">Limpar</button>
+            </div>
+          </form>
+
+          <div class="admin-card glass">
+            <h2>Perguntas do quiz</h2>
+            <div id="quizQuestionsList" class="admin-list"></div>
+          </div>
+        </div>
+
+        <div class="admin-card glass" style="margin-top:18px">
+          <h2>Resultados do quiz</h2>
+          <p class="muted">Edite os títulos e textos dos resultados. As chaves não precisam mudar.</p>
+          <form id="quizResultsForm" class="settings-form"></form>
+          <button id="saveQuizResultsBtn" class="btn btn-primary">Salvar resultados</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <script>
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeLabel = document.getElementById("themeLabel");
+
+    function updateThemeButton() {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+
+      if (currentTheme === "dark") {
+        themeIcon.textContent = "☀️";
+        themeLabel.textContent = "Modo claro";
+      } else {
+        themeIcon.textContent = "🌙";
+        themeLabel.textContent = "Modo escuro";
+      }
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+
+      document.documentElement.setAttribute("data-theme", nextTheme);
+      localStorage.setItem("oca-theme", nextTheme);
+      updateThemeButton();
+    });
+
+    updateThemeButton();
+  </script>
+
+  <script src="admin.js"></script>
+</body>
+</html>
